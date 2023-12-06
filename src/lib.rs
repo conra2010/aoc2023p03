@@ -1,4 +1,3 @@
-use alloc::ffi;
 
 pub fn add(left: usize, right: usize) -> usize {
     left + right
@@ -78,35 +77,33 @@ fn ack(lx: &String, e: &mut Engine) {
 
     e.row = e.row + 1;
 
-    let mut i = lx.chars().into_iter().peekable();
+    let chars: Vec<char> = lx.chars().into_iter().collect();
 
-    while let Some(c) = i.next() {
+    let mut k = 0usize;
+
+    while k < lx.len() {
 
         col = col + 1;
         
         //  detects a digit; store it with current clock
-        if char::is_ascii_digit(&c) {
+        if char::is_ascii_digit(&chars[k]) {
             //  value
-            let mut vx = c.to_string();
-
+            let mut vx = chars[k].to_string();
             //  location
             let mut cloc = Patch { row: e.row, col, len: 1, tick: e.clock };
-                
             //  rest
-            while let Some(z) = i.next() {
+            k += 1; col += 1;
 
-                col = col + 1;
+            while k < lx.len() && char::is_ascii_digit(&chars[k]) {
 
                 //  others
-                if char::is_ascii_digit(&z) {
+                if char::is_ascii_digit(&chars[k]) {
                     //  value
-                    vx.push(z);
+                    vx.push(chars[k]);
                     //  location
                     cloc.len = cloc.len + 1;
-                } else {
-                    //  maybe
-                    
-                    break;
+                    //  rest
+                    k += 1; col += 1;
                 }
             }
 
@@ -118,13 +115,15 @@ fn ack(lx: &String, e: &mut Engine) {
         }
 
         //  detects a symbol
-        if char::is_ascii_uppercase(&c) {
+        if char::is_ascii_uppercase(&chars[k]) {
             //  patches
             //  construct patches of neighbours and store them with current clock
             e.patches.push(Patch { row: e.row - 1, col: col - 1, len: 3, tick: e.clock });
             e.patches.push(Patch { row: e.row, col: col - 1, len: 3, tick: e.clock });
             e.patches.push(Patch { row: e.row + 1, col: col - 1, len: 3, tick: e.clock });
         }
+
+        k += 1;
     }
 
     //  ends line (for clock)
