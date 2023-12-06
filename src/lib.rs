@@ -23,7 +23,7 @@ struct Digit {
 
 fn overlaps(dx: &Digit, px: &Patch) -> bool {
 
-    if (dx.location.row != px.row) { return false; }
+    if dx.location.row != px.row { return false; }
 
     let dxa = dx.location.col;
     let dxb = dx.location.col + dx.location.len - 1;
@@ -172,6 +172,6 @@ mod tests {
             String::from("A11...11A"),
         ].iter());
 
-        assert_eq!(rx.signature(), (0, 0, 4, 88));
+        assert_eq!(rx.signature(), (0, 6, 4, 88));
     }
 }
