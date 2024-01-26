@@ -7,6 +7,8 @@ edition = "2021"
 
 [dependencies]
 rand = "0.8.5"
+gmp-mpfr-sys = "1.6"
+rug = "1.24.0"
 
 [lib]
 name = "l003"
